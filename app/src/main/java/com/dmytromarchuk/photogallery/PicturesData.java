@@ -3,8 +3,8 @@ package com.dmytromarchuk.photogallery;
 import com.orm.SugarRecord;
 
 public class PicturesData extends SugarRecord {
-    String name;
-    String url;
+    private String name;
+    private String url;
 
     public PicturesData() {
     }

@@ -12,20 +12,25 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import viewpager.ViewPagerActivity;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
     private Context mContext;
+    private List<PicturesData> mData;
 
-    public RecyclerViewAdapter(Context context) {
+    public RecyclerViewAdapter(Context context, List<PicturesData> data) {
+        super();
+        this.mData = data;
         mContext = context;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
-        TextView url;
-        ImageView image;
-        CardView cardView;
+        private TextView name;
+        private TextView url;
+        private ImageView image;
+        private CardView cardView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -39,16 +44,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
-        MyViewHolder myViewHolder = new MyViewHolder(view);
-        return myViewHolder;
+        return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
-
-        PicturesData item = PicturesData.findById(PicturesData.class, listPosition + 1);
-
-        Picasso.with(mContext).load(item.getUrl()).resize(320, 240).into(holder.image);
+        PicturesData item = mData.get(listPosition);
+        if (!isLoaded(holder.image))
+            Picasso.with(mContext).load(item.getUrl())
+                    .resizeDimen(R.dimen.image_size_width, R.dimen.image_size_height)
+                    .into(holder.image);
         holder.name.setText(item.getName());
         holder.url.setText(item.getUrl());
 
@@ -62,8 +67,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
     }
 
+    private boolean isLoaded(ImageView view) {
+        return view.getDrawable() != null;
+    }
+
     @Override
     public int getItemCount() {
-        return (int) PicturesData.count(PicturesData.class);
+        return mData.size();
     }
 }

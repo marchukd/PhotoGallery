@@ -12,9 +12,8 @@ import com.squareup.picasso.Picasso;
 
 public class PageFragment extends Fragment {
 
-    static final String ITEM_URL = "item_url";
-
-    String url;
+    private static final String ITEM_URL = "item_url";
+    private String url;
 
     static PageFragment newInstance(String url) {
         PageFragment pageFragment = new PageFragment();

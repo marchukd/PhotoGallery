@@ -12,6 +12,8 @@ import com.dmytromarchuk.photogallery.Constants;
 import com.dmytromarchuk.photogallery.PicturesData;
 import com.dmytromarchuk.photogallery.R;
 
+import java.util.List;
+
 public class ViewPagerActivity extends FragmentActivity {
     private ViewPager pager;
     private PagerAdapter pagerAdapter;
@@ -22,25 +24,27 @@ public class ViewPagerActivity extends FragmentActivity {
         setContentView(R.layout.view_pager_activity);
 
         pager = (ViewPager) findViewById(R.id.pager);
-        pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+        pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), PicturesData.listAll(PicturesData.class));
         pager.setAdapter(pagerAdapter);
         pager.setCurrentItem(getIntent().getIntExtra(Constants.POSITION, 0));
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+        private List<PicturesData> data;
 
-        public MyFragmentPagerAdapter(FragmentManager fm) {
+        public MyFragmentPagerAdapter(FragmentManager fm, List<PicturesData> data) {
             super(fm);
+            this.data = data;
         }
 
         @Override
         public Fragment getItem(int position) {
-            return PageFragment.newInstance(PicturesData.findById(PicturesData.class, position + 1).getUrl());
+            return PageFragment.newInstance(data.get(position).getUrl());
         }
 
         @Override
         public int getCount() {
-            return (int) PicturesData.count(PicturesData.class);
+            return data.size();
         }
 
     }
